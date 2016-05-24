@@ -84,15 +84,19 @@
 
 
 
-<meta name="description">
-<meta property="og:type" content="website">
-<meta property="og:title" content="陈晓东">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。
+看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引">
+<meta property="og:type" content="article">
+<meta property="og:title" content="FBRetainCycleDetector解析——获取一般对象的Strong成员变量">
+<meta property="og:url" content="http://yoursite.com/2016/05/24/FBRetainCycleDetector解析——获取一般对象的Strong成员变量/index.html">
 <meta property="og:site_name" content="陈晓东">
-<meta property="og:description">
+<meta property="og:description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。
+看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引">
+<meta property="og:updated_time" content="2016-05-24T12:02:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="陈晓东">
-<meta name="twitter:description">
+<meta name="twitter:title" content="FBRetainCycleDetector解析——获取一般对象的Strong成员变量">
+<meta name="twitter:description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。
+看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引">
 
 
 
@@ -110,7 +114,7 @@
   };
 </script>
 
-  <title> 陈晓东 </title>
+  <title> FBRetainCycleDetector解析——获取一般对象的Strong成员变量 | 陈晓东 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -131,9 +135,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left 
-   page-home 
- ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -210,9 +212,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
   
@@ -232,10 +234,7 @@
             
             
               
-                
-                <a class="post-title-link" href="/2016/05/24/FBRetainCycleDetector解析——获取一般对象的Strong成员变量/" itemprop="url">
-                  FBRetainCycleDetector解析——获取一般对象的Strong成员变量
-                </a>
+                FBRetainCycleDetector解析——获取一般对象的Strong成员变量
               
             
           </h1>
@@ -275,9 +274,7 @@
       
 
       
-        
-          
-            <p>Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。</p>
+        <p>Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。</p>
 <p>看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引用，原理在 Automatic memory leak detection on iOS 这篇博客中有说到：把对象（包括 Block 对象）当成节点，以强引用为关系建立有向图，以深度优先遍历该有向图，寻找有向图中的环，一个环就代表一个循环引用。</p>
 <p>本篇博客介绍 FBRetainCycleDetector 库中获取一般对象的 Strong 成员变量的原理。</p>
 <h1 id="Runtime-中的相关函数"><a href="#Runtime-中的相关函数" class="headerlink" title="Runtime 中的相关函数"></a>Runtime 中的相关函数</h1><p>先介绍一下 Runtime 中的几个函数：</p>
@@ -351,16 +348,19 @@ currentClass = class_getSuperclass(currentClass);
 </li>
 </ul>
 
-          
+      
+    </div>
+
+    <div>
+      
         
       
     </div>
 
     <div>
       
-    </div>
+        
 
-    <div>
       
     </div>
 
@@ -368,213 +368,32 @@ currentClass = class_getSuperclass(currentClass);
       
 
       
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
+              <a href="/2016/05/24/iOS开发中的分辨率问题/" rel="next" title="iOS开发中的分辨率问题">
+                <i class="fa fa-chevron-left"></i> iOS开发中的分辨率问题
+              </a>
             
-              
-                
-                <a class="post-title-link" href="/2016/05/24/iOS开发中的分辨率问题/" itemprop="url">
-                  iOS开发中的分辨率问题
-                </a>
-              
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
             
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-24T19:54:14+08:00" content="2016-05-24">
-              2016-05-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
+          </div>
         </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          <p>今天逛知乎的时候看到这个问题</p>
-<pre><code>ios开发过程中屏幕尺寸，分辨率及其比例等等之间的关系?一次性详尽，清晰介绍，以饷入门者
-</code></pre>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/24/iOS开发中的分辨率问题/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
-    
-      
 
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/24/过程比目的重要-静默亦比喧嚣深刻/" itemprop="url">
-                  过程比目的重要,静默亦比喧嚣深刻
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-05-24T19:25:53+08:00" content="2016-05-24">
-              2016-05-24
-            </time>
-          </span>
-
-          
-
-          
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="陌生人-我有故事-你可有酒"><a href="#陌生人-我有故事-你可有酒" class="headerlink" title="陌生人,我有故事,你可有酒?"></a>陌生人,我有故事,你可有酒?</h1><p>东<br>94 天蝎男 懒癌晚期 不喜烟但离不开<br>喜欢唱歌 尽管不是很好听<br>16年5月24号7.32分,躺在床上想着不可能遇到的某某人,看着一行行在我手中敲出来的远方<br>陌生人,我有故事,你可有酒?<br>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/05/24/过程比目的重要-静默亦比喧嚣深刻/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-        
+    <div class="post-spread">
       
     </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-  </section>
-
-  
+  </div>
 
 
           </div>
@@ -582,6 +401,10 @@ currentClass = class_getSuperclass(currentClass);
 
 
           
+  <div class="comments" id="comments">
+    
+  </div>
+
 
         </div>
         
@@ -601,8 +424,17 @@ currentClass = class_getSuperclass(currentClass);
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -638,6 +470,17 @@ currentClass = class_getSuperclass(currentClass);
 
       </section>
 
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runtime-中的相关函数"><span class="nav-number">1.</span> <span class="nav-text">Runtime 中的相关函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ivar-Layout"><span class="nav-number">2.</span> <span class="nav-text">Ivar Layout</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
+            
+          </div>
+        </section>
       
 
     </div>
@@ -734,6 +577,10 @@ currentClass = class_getSuperclass(currentClass);
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
