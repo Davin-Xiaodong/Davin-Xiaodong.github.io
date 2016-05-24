@@ -276,82 +276,12 @@
 
       
         
-          
-            <p>Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。</p>
-<p>看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引用，原理在 Automatic memory leak detection on iOS 这篇博客中有说到：把对象（包括 Block 对象）当成节点，以强引用为关系建立有向图，以深度优先遍历该有向图，寻找有向图中的环，一个环就代表一个循环引用。</p>
-<p>本篇博客介绍 FBRetainCycleDetector 库中获取一般对象的 Strong 成员变量的原理。</p>
-<h1 id="Runtime-中的相关函数"><a href="#Runtime-中的相关函数" class="headerlink" title="Runtime 中的相关函数"></a>Runtime 中的相关函数</h1><p>先介绍一下 Runtime 中的几个函数：</p>
-<pre><code>Class object_getClass(id obj)：获取一个对象所属的类；
-Class class_getSuperclass(Class cls)：获取一个类的父类；
-Ivar *class_copyIvarList(Class cls, unsigned int *outCount)：获取某个类中的成员变量个数及成员变量数组，但是不包含父类的；
-ptrdiff_t ivar_getOffset(Ivar v)：获取成员变量中的偏移位置，关于成员变量偏移位置的解析，可以看这篇博客Objective-C类成员变量深度剖析；
-const uint8_t *class_getIvarLayout(Class cls)：获取某个类中 Strong 类型的成员变量的布局，关于 Ivar Layout 下面会展开说明一下。
-</code></pre><h1 id="Ivar-Layout"><a href="#Ivar-Layout" class="headerlink" title="Ivar Layout"></a>Ivar Layout</h1><p>const uint8_t *class_getIvarLayout(Class cls) 函数中有一个 Ivar Layout 的概念，表示成员变量的布局情况。</p>
-<p>相对于 Strong 类型的成员变量，函数 const uint8_t *class_getWeakIvarLayout(Class cls) 可以获取 Weak 类型的成员变量的布局情况。</p>
-<p>例子如下：</p>
-<p>@interface ClassA : NSObject<br>{<br>    <strong>unsafe_unretained id ivar0;
-    </strong>weak id ivar1;<br>    <strong>strong id ivar2;
-    </strong>weak id ivar3;<br>    <strong>strong id ivar4;
-    </strong>strong id ivar5;<br>}<br>@end</p>
-<p>const uint8_t <em>class_getIvarLayout(Class cls) 函数获取到的是一个 uint8_t 的数组，一个 uint8_t 在 16 进制下是两位，所以编码的值每两位一对。这两位中，前面一位表示有多少个非 Strong 类型的成员变量，后面一位表示接下来有多少个 Strong 类型的成员变量，而这个顺序是根据成员变量声明的顺序决定的，此顺序也跟函数 Ivar </em>class_copyIvarList(Class cls, unsigned int *outCount) 获取到的一致。</p>
-<p>在这个例子中，ClassA 类的 IvarLayout 的值为 0x211200：</p>
-<pre><code>0x211200 中的 21 中的 2 就代表一开始有两个非 Strong 类型的成员变量（ivar0 及 ivar1），其中的 1 则代表接下来有一个 Strong 类型的成员变量（ivar2）；
-接下来的 12 中的 1 代表接下来有一个 非 Strong 类型的成员变量（ivar3），其中的 2 则代表接下来有两个 Strong 类型的成员变量（ivar4 及 ivar5）；
-最后的 00 为结束符。
-</code></pre><p>同理我们可以推测出 ClassA 类的 WeakIvarLayout 的值为：0x111100。</p>
-<p>本段参考资料：Objective-C Class Ivar Layout 探索</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>基于上面介绍的几个函数，串连起来就可以实现获取一般对象的强引用对象的功能了，代码如下：</p>
-<ul>
-<li><p>(NSArray<nsvalue *=""> <em>)strongIvarsWithObject:(id)object<br>{<br>  NSMutableArray&lt;NSValue </em>&gt; *strongIvars = [NSMutableArray new];</nsvalue></p>
-<p>  <strong>unsafe_unretained Class previousClass = nil;
-  </strong>unsafe_unretained Class currentClass = object_getClass(object);</p>
-<p>  // 往上一直获取父类，直到 NSObject<br>  while (previousClass != currentClass) {</p>
-<pre><code>// 获取当前类的 Strong 成员变量布局
-const uint8_t * ivarLayout = class_getIvarLayout(currentClass);
-
-if (ivarLayout) {
-    // 找出 Strong 成员变量的位置
-    NSMutableIndexSet *interestingIndexes = [NSMutableIndexSet new];
-    NSUInteger index = 0;
-    while ((*ivarLayout) != &apos;\x00&apos;) {
-        // 获取高位（高位表示非 Strong 成员变量的个数）及低位（低位表示 Strong 成员变量的个数）
-        int upperNibble = (*ivarLayout &amp; 0xf0) &gt;&gt; 4;
-        int lowerNibble = *ivarLayout &amp; 0xf;
-
-        // 跳过非 Strong 成员变量的个数
-        index += upperNibble;
-
-        // 保存本次 Strong 成员变量的位置
-        [interestingIndexes addIndexesInRange:NSMakeRange(index, lowerNibble)];
-        index += lowerNibble;
-
-        ++ivarLayout;
-    }
-
-    // 获取当前类的成员变量数组
-    unsigned int ivarCount;
-    Ivar *ivars = class_copyIvarList(currentClass, (&amp;ivarCount));
-
-    // 遍历本类中的所有成员变量，保存位置在 interestingIndexes 中的成员变量
-    for (NSUInteger i = 0; i &lt; ivarCount; ++i) {
-        if ([interestingIndexes containsIndex:i]) {
-            Ivar ivar = ivars[i];
-
-            // 此处为简单化，直接把 Ivar 数据结构 NSValue 化，也可以创建一个表示 Ivar 的类
-            NSValue *ivarValue = [NSValue value:&amp;ivar withObjCType:@encode(Ivar)];
-            [strongIvars addObject:ivarValue];
-        }
-    }
-}
-
-previousClass = currentClass;
-currentClass = class_getSuperclass(currentClass);
-</code></pre><p>  }</p>
-<p>  return [strongIvars copy];<br>}</p>
-</li>
-</ul>
-
-          
+          <p>Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。<br>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/05/24/FBRetainCycleDetector解析——获取一般对象的Strong成员变量/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
