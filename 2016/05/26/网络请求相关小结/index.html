@@ -1,0 +1,673 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="1 NSURLConnettion
+NSURLConnettion是 Core Foundation/CFNetwork框架 API 之上的一个抽象. NSURLConnettion是用来指代 Foundation 框架中的一系列组件: NSURLRequest,NSURLResponse,NSURLProtocol,NSURLCache,NSHTTPCookieStorage,NSURLCred">
+<meta property="og:type" content="article">
+<meta property="og:title" content="网络请求相关小结">
+<meta property="og:url" content="http://yoursite.com/2016/05/26/网络请求相关小结/index.html">
+<meta property="og:site_name" content="陈晓东">
+<meta property="og:description" content="1 NSURLConnettion
+NSURLConnettion是 Core Foundation/CFNetwork框架 API 之上的一个抽象. NSURLConnettion是用来指代 Foundation 框架中的一系列组件: NSURLRequest,NSURLResponse,NSURLProtocol,NSURLCache,NSHTTPCookieStorage,NSURLCred">
+<meta property="og:updated_time" content="2016-05-26T11:28:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="网络请求相关小结">
+<meta name="twitter:description" content="1 NSURLConnettion
+NSURLConnettion是 Core Foundation/CFNetwork框架 API 之上的一个抽象. NSURLConnettion是用来指代 Foundation 框架中的一系列组件: NSURLRequest,NSURLResponse,NSURLProtocol,NSURLCache,NSHTTPCookieStorage,NSURLCred">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 网络请求相关小结 | 陈晓东 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">陈晓东</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">人生若只如初见\何事秋风悲画扇</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                网络请求相关小结
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-05-26T19:27:28+08:00" content="2016-05-26">
+              2016-05-26
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>1 NSURLConnettion</p>
+<pre><code>NSURLConnettion是 Core Foundation/CFNetwork框架 API 之上的一个抽象. NSURLConnettion是用来指代 Foundation 框架中的一系列组件: NSURLRequest,NSURLResponse,NSURLProtocol,NSURLCache,NSHTTPCookieStorage,NSURLCredentialStorage 以及同名类 NSURLConnection.
+</code></pre><a id="more"></a>
+<pre><code>注1:原来的使用原理:一个 NSURLRequest 发送给 NSURLConnect.被委托对象(遵守 NSURLConnectionDeledate 和 NSURLConnectionDataDeledate 非正式协议)异步返回一个 NSURLResponce 和服务器的 NSData.
+
+注2:在一个请求发送给服务器的时候,系统会先查询缓存信息,然后根据策略和可用写的不同,当在缓存中找到响应则直接返回.否则,系统将根据我们的策略,将接到请求后的响应缓存到并返回.
+</code></pre><p>注3:在把请求发送给服务器的时候,服务器会发出鉴权查询,这可以有共享的 cookie 或者机密存储来自动响应,或者由被委托的对象来响应.发送中的请求,也可以被 NSURLProtocol 拦截,以便在必要的时候,无缝的改变其请求.</p>
+<p>NSURLConnettion是使用步骤:</p>
+<p>1 获取一个 URL</p>
+<p>2 通过 URL 创建一个请求</p>
+<p>3 用NSURLConnettion发送请求</p>
+<p>2 NSURLSession</p>
+<pre><code>和 NSURLConnection 一样, NSURLSession 不仅仅包括同名的 NSURLSession, 还包括NSURLRequest 和 NSURLCache. 同时将NSURLConnection 对应为NSURLSession,NSURLSessionFiguration 以及NSURLSession 的三个子类,即NSURLSessionTask,NSURLSessionUpLoadTask 和 NSULSessionDownLoadTask.
+
+和 NSURLConnection 相比, NSURLSession 最大的改变可以配置每一个缓存的session 缓存, cookie 值,协议以及证书策略甚至夸程序共享这些信息.这保证了程序和网络框架之间的相互独立.每一个 NSURLSession 有一个 NSURLSessionConfiguration 来进行初始化, NSURLSessionConfiguration指定了策略,以及在移动设备上增强性能的选项.
+
+NSURLSession 的另一个特点就是 session Task, 用来处理的上传和下载.和 NSURLConnection 最大的不同之处在于,所有的 task 共享其创造者 NSURLSession.
+
+注: NSURLSessionTask分析
+
+NSURLSessionTask 是一个抽象类,里面包含NSURLSessionDataTask  , NSURLSessionDownLoadTask 以及 NSURLSessionUpLoadTask三个子类.这三个子类封装了网络的基本任务:获取数据,上传和下载
+
+
+
+使用原理:当一个 NSURLSessionDataTask 完成的时候,会有一个返回的数据,一个 NSURLSessionDownLoadTask 完成的时候会带一个临时文件的路径.文件上传的时候也会返回一定的数据,所以可以说 NSURLSessionUpLoadTask 是继承于 NSURLSessionDataTask.所有的 Task 都可以取消,暂停和恢复,当暂停的时候回记录当前的位置,以便下载继续从此点继续下载.需要说明的是 NSURLSessionTask 是有 NSURLSession 创建的.
+
+NSURLSession的使用步骤:和 NSURLConnection 基本相似,然后使用resume方法来讲它运行.
+
+1 获取一个 URL
+
+2 通过 URL 创建一个请求
+
+2.1 创建一个上传的NSData(UpLoad 上传的时候用)
+
+3 创建一个NSURLSession的单例
+
+4 通过NSURLSession发送请求(注:使用 resume)
+</code></pre><p>实例:</p>
+<p>1 DataTask</p>
+<p>NSURL *URL = [NSURL URLWithString:@”<a href="http://example.com" target="_blank" rel="external">http://example.com</a>“];</p>
+<p> NSURLRequest *request = [NSURLRequest requestWithURL:URL];</p>
+<p> NSURLSession *session = [NSURLSession sharedSession];</p>
+<p> NSURLSessionDataTask *task = [session dataTaskWithRequest:request</p>
+<pre><code>                                    completionHandler:
+
+^(NSData *data, NSURLResponse *response, NSError *error) {
+
+    // ...
+
+}];
+</code></pre><p> [task resume];</p>
+<p>2 UpLoadTask</p>
+<p>NSURL *URL = [NSURL URLWithString:@”<a href="http://example.com/upload" target="_blank" rel="external">http://example.com/upload</a>“];</p>
+<p> NSURLRequest *request = [NSURLRequest requestWithURL:URL];</p>
+<p> NSData *data = …;</p>
+<p> NSURLSession *session = [NSURLSession sharedSession];</p>
+<p> NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request</p>
+<pre><code>                                                  fromData:data
+
+                                              completionHandler:
+
+^(NSData *data, NSURLResponse *response, NSError *error) {
+
+    // ...
+
+}];
+</code></pre><p> [uploadTask resume];</p>
+<p>3 DownLoadTask</p>
+<p>注: Download task 也需要一个 request，不同之处在于 completionHandler 这个 block。Data task 和 upload task 会在任务完成时一次性返回，但是 Download task 是将数据一点点地写入本地的临时文件。所以在 completionHandler 这个 block 里，我们需要把文件从一个临时地址移动到一个永久的地址保存起来.</p>
+<p>NSURL *URL = [NSURL URLWithString:@”<a href="http://example.com/file.zip" target="_blank" rel="external">http://example.com/file.zip</a>“];</p>
+<p> NSURLRequest *request = [NSURLRequest requestWithURL:URL];</p>
+<p> NSURLSession *session = [NSURLSession sharedSession];</p>
+<p> NSURLSessionDownloadTask *downloadTask = [session downloadTaskWithRequest:request</p>
+<pre><code>                                        completionHandler:
+
+^(NSURL *location, NSURLResponse *response, NSError *error) {
+
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+
+    NSURL *documentsDirectoryURL = [NSURL fileURLWithPath:documentsPath];
+
+    NSURL *newFileLocation = [documentsDirectoryURL URLByAppendingPathComponent:[[response URL] lastPathComponent]];
+
+    [[NSFileManager defaultManager] copyItemAtURL:location toURL:newFileLocation error:nil];
+
+}];
+</code></pre><p> [downloadTask resume];</p>
+<p>3 NSURLSession 和 NSURLConnection 的区别</p>
+<pre><code>NSURLSession即有 session 的代理方法又有 Task 的代理方法.session 的代理方法用来处理连接层的问题(服务器的信任,客户端证书的评估等),Task 的代理方法用来处理鉴权查询和以网络请求有关的问题.
+</code></pre><p>4 AFN 框架</p>
+<pre><code>        AFN 是对 NSURLConnection 的一层封装
+
+        AFN 的主要功能:
+
+NSURLConnection
+</code></pre><p>AFURLConnectionOperation</p>
+<p>AFHTTPRequestOperation</p>
+<p>AFHTTPRequestOperationManager(封装了常用的 HTTP 方法)</p>
+<p>AFHTTPRequestOperationManager的属性</p>
+<p>1 baseURL :开发者针要对 AFHTTPRequestOperationManager 自定义一个单例子类，设置 baseURL, 所有的网络访问，都只使用相对路径即可.</p>
+<p>2 requestSerializer :请求数据格式/默认是二进制的 HTTP</p>
+<p>3 responseSerializer :响应的数据格式/默认是 JSON 格式</p>
+<p>4 operationQueue</p>
+<p>5 reachabilityManager :网络连接管理器</p>
+<p> AFHTTPRequestOperationManager方法:</p>
+<p>1 manager :方便创建管理器的类方法</p>
+<p>2 HTTPRequestOperationWithRequest :在访问服务器时，如果要告诉服务器一些附加信息，都需要在 Request 中设置</p>
+<p>3 GET</p>
+<p>4 POST</p>
+<pre><code>NSURLSession
+</code></pre><p>AFURLSessionManager</p>
+<p>AFHTTPSessionManager(封装了常用的 HTTP 方法)</p>
+<p>1 GET</p>
+<p>2 POST</p>
+<p>3 UIKit+AFNetWorking分类</p>
+<p>4 NSProgress(利用 KVO)</p>
+<pre><code>半自动的序列化和反序列化
+</code></pre><p>AFURLRequestSerialization :请求的数据格式/默认是二进制的</p>
+<p>AFURLResponseSerialization :响应的数据格式/默认是JSON格式</p>
+<pre><code>附加功能
+</code></pre><p>1 安全策略:(HTTPS 和AFSecurityPolicy)</p>
+<p>2 网络检测: (对链接方式进行了封装和 AFNetWorkingReachabiliManager)</p>
+<p>使用链接: <a href="http://www.cnblogs.com/worldtraveler/p/4736643.html" target="_blank" rel="external">http://www.cnblogs.com/worldtraveler/p/4736643.html</a></p>
+<p>AFN 的使用步骤:</p>
+<pre><code>1 创建一个请求操作管理者
+
+2 声明响应结果进行 JSON,XML等数据解析,返回 Data
+
+3 设置请求参数
+
+4 发送请求
+
+补充 ASI: (功能很强大,但是已经不更新了)
+</code></pre><p>ASI 使用步骤:</p>
+<p>1 获取 URL</p>
+<p>2 获取 ASI 请求对象</p>
+<p>3 发送请求</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/24/FBRetainCycleDetector解析——获取一般对象的Strong成员变量/" rel="next" title="FBRetainCycleDetector解析——获取一般对象的Strong成员变量">
+                <i class="fa fa-chevron-left"></i> FBRetainCycleDetector解析——获取一般对象的Strong成员变量
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Davin-Xiaodong" />
+          <p class="site-author-name" itemprop="name">Davin-Xiaodong</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目录</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Davin-Xiaodong</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
