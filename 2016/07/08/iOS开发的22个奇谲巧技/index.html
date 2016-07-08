@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
+<meta name="description" content="结合自身的实践开发经验总结出了22个iOS开发的小技巧，以非常欢乐的语调轻松解决开发过程中所遇到的各种苦逼难题，光读着便已忍俊不禁。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql中的多行查询结果合并成一个">
-<meta property="og:url" content="http://yoursite.com/2015/07/04/mysql中的多行查询结果合并成一个/index.html">
+<meta property="og:title" content="iOS开发的22个奇谲巧技">
+<meta property="og:url" content="http://yoursite.com/2016/07/08/iOS开发的22个奇谲巧技/index.html">
 <meta property="og:site_name" content="陈晓东">
-<meta property="og:description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
-<meta property="og:updated_time" content="2016-07-04T03:37:39.000Z">
+<meta property="og:description" content="结合自身的实践开发经验总结出了22个iOS开发的小技巧，以非常欢乐的语调轻松解决开发过程中所遇到的各种苦逼难题，光读着便已忍俊不禁。">
+<meta property="og:updated_time" content="2016-07-08T05:51:53.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql中的多行查询结果合并成一个">
-<meta name="twitter:description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
+<meta name="twitter:title" content="iOS开发的22个奇谲巧技">
+<meta name="twitter:description" content="结合自身的实践开发经验总结出了22个iOS开发的小技巧，以非常欢乐的语调轻松解决开发过程中所遇到的各种苦逼难题，光读着便已忍俊不禁。">
 
 
 
@@ -114,7 +111,7 @@
   };
 </script>
 
-  <title> mysql中的多行查询结果合并成一个 | 陈晓东 </title>
+  <title> iOS开发的22个奇谲巧技 | 陈晓东 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -234,7 +231,7 @@
             
             
               
-                mysql中的多行查询结果合并成一个
+                iOS开发的22个奇谲巧技
               
             
           </h1>
@@ -246,8 +243,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-04T11:34:01+08:00" content="2015-07-04">
-              2015-07-04
+            <time itemprop="dateCreated" datetime="2016-07-08T13:48:08+08:00" content="2016-07-08">
+              2016-07-08
             </time>
           </span>
 
@@ -274,50 +271,136 @@
       
 
       
-        <p>SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：</p>
-<p>利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|<br><a id="more"></a></p>
-<p>本文通过实例介绍了MySQL中的group_concat函数的使用方法，比如select group_concat(name) 。<br>MySQL中group_concat函数<br>完整的语法如下：<br>group_concat([DISTINCT] 要连接的字段 [Order BY ASC/DESC 排序字段] [Separator ‘分隔符’])</p>
-<p>基本查询<br>mysql&gt; select * from aa;</p>
-<p>+——+——+</p>
-<p>| id| name |</p>
-<p>+——+——+</p>
-<p>|1 | 10|</p>
-<p>|1 | 20|</p>
-<p>|1 | 20|</p>
-<p>|2 | 20|</p>
-<p>|3 | 200 |</p>
-<p>|3 | 500 |</p>
-<p>+——+——+</p>
-<p>6 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，逗号分隔(默认)<br>mysql&gt; select id,group_concat(name) from aa group by id;</p>
-<p>+——+——————–+</p>
-<p>| id| group_concat(name) |</p>
-<p>+——+——————–+</p>
-<p>|1 | 10,20,20|<br>|2 | 20 |<br>|3 | 200,500|</p>
-<p>+——+——————–+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，分号分隔<br>mysql&gt; select id,group_concat(name separator ‘;’) from aa group by id;</p>
-<p>+——+———————————-+</p>
-<p>| id| group_concat(name separator ‘;’) |</p>
-<p>+——+———————————-+</p>
-<p>|1 | 10;20;20 |<br>|2 | 20|<br>|3 | 200;500 |</p>
-<p>+——+———————————-+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把去冗余的name字段的值打印在一行，<br>逗号分隔</p>
-<p>mysql&gt; select id,group_concat(distinct name) from aa group by id;</p>
-<p>+——+—————————–+</p>
-<p>| id| group_concat(distinct name) |</p>
-<p>+——+—————————–+</p>
-<p>|1 | 10,20|<br>|2 | 20 |<br>|3 | 200,500 |</p>
-<p>+——+—————————–+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，逗号分隔，以name排倒序<br>mysql&gt; select id,group_concat(name order by name desc) from aa group by id;</p>
-<p>+——+—————————————+</p>
-<p>| id| group_concat(name order by name desc) |</p>
-<p>+——+—————————————+</p>
-<p>|1 | 20,20,10 |<br>|2 | 20|<br>|3 | 500,200|</p>
-<p>+——+—————————————+</p>
-<p>3 rows in set (0.00 sec)<br>每天进步一点点</p>
+        <p>结合自身的实践开发经验总结出了22个iOS开发的小技巧，以非常欢乐的语调轻松解决开发过程中所遇到的各种苦逼难题，光读着便已忍俊不禁。<br><a id="more"></a></p>
+<p>　　1. TableView不显示没内容的Cell怎么办？</p>
+<p>　　类似于图1，我不想让下面的那些空显示。很简单，添加“self.tableView.tableFooterView = [[UIView alloc] init];”试过都说好，加完这句之后就变成了图2的样子。</p>
+<p>　　2. 自定义了leftBarbuttonItem左滑返回手势失效了怎么办？<br>1<br>2<br>3<br>4<br>5<br>6</p>
+<p>self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc]<br>              initWithImage:img<br>              style:UIBarButtonItemStylePlain<br>              target:self<br>              action:@selector(onBack:)];<br>self.navigationController.interactivePopGestureRecognizer.delegate = (id<uigesturerecognizerdelegate>)self;</uigesturerecognizerdelegate></p>
+<p>　　3. ScrollView莫名其妙不能在viewController划到顶怎么办？<br>1</p>
+<p>self.automaticallyAdjustsScrollViewInsets = NO;</p>
+<p>　　4. 键盘事件写得好烦躁，都想摔键盘了怎么办？</p>
+<pre><code>买个结实的键盘；
+使用IQKeyboardManager（GitHub上可搜索），用完之后腰也不疼了，腿也不酸了。
+</code></pre><p>　　5. 为什么我的App老是不流畅，到底哪里出了问题？</p>
+<p>　　如图：</p>
+<p>　　这个神器叫做：KMCGeigerCounter ，快去GitHub上搬运吧。</p>
+<p>　　6. 怎么在不新建一个Cell的情况下调整separaLine的位置？<br>1</p>
+<p>_myTableView.separatorInset = UIEdgeInsetsMake(0, 100, 0, 0);</p>
+<p>　　7. 怎么点击self.view就让键盘收起，需要添加一个tapGestures么？<br>1<br>2<br>3<br>4</p>
+<ul>
+<li>(void)touchesBegan:(NSSet <em>)touches withEvent:(UIEvent </em>)event<br>{<br> [self.view endEditing:YES];<br>}</li>
+</ul>
+<p>　　8. 怎么给每个ViewController设定默认的背景图片？</p>
+<p>　　使用基类啊，少年。</p>
+<p>　　9. 想在代码里改在xib里添加的layoutAttributes，但该怎么用代码找？</p>
+<p>　　像拉Button一样地拉你的约束，nslayoutattribute也是可以拉线的。</p>
+<p>　　10. 怎么像Safari一样滑动的时候隐藏navigationbar？<br>1</p>
+<p>navigationController.hidesBarsOnSwipe = Yes</p>
+<p>　　11. 导航条返回键带的title太讨厌了，怎么让它消失？<br>1<br>2</p>
+<p>[[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(0, -60)<br>                                                     forBarMetrics:UIBarMetricsDefault];</p>
+<p>　　12. CoreData用起来好烦，语法又臭又长怎么办？</p>
+<p>　　MagicRecord</p>
+<p>　　13. CollectionView怎么实现tableview那种悬停的header？</p>
+<p>　　CSStickyHeaderFlowLayout</p>
+<p>　　14. 能不能只用一个pan手势来代替UISwipegesture的各个方向？</p>
+<ul>
+<li>(void)pan:(UIPanGestureRecognizer *)sender-<br>{</li>
+</ul>
+<p>typedef NS_ENUM(NSUInteger, </p>
+<p>UIPanGestureRecognizerDirection) {</p>
+<pre><code>UIPanGestureRecognizerDirectionUndefined,
+UIPanGestureRecognizerDirectionUp,
+UIPanGestureRecognizerDirectionDown,
+UIPanGestureRecognizerDirectionLeft,
+UIPanGestureRecognizerDirectionRight
+</code></pre><p>};<br>static UIPanGestureRecognizerDirection direction = UIPanGestureRecognizerDirectionUndefined;</p>
+<p>switch (sender.state) {</p>
+<pre><code>case UIGestureRecognizerStateBegan: {
+    if (direction ==         UIPanGestureRecognizerDirectionUndefined) {
+
+        CGPoint velocity = [sender velocityInView:recognizer.view];
+        BOOL isVerticalGesture = fabs(velocity.y) &gt; fabs(velocity.x);
+
+        if (isVerticalGesture) {
+            if (velocity.y &gt; 0) {
+                direction = UIPanGestureRecognizerDirectionDown;
+            } else {
+                direction = UIPanGestureRecognizerDirectionUp;
+            }
+        }
+        else {
+            if (velocity.x &gt; 0) {
+                direction = UIPanGestureRecognizerDirectionRight;
+            } else {
+                direction = UIPanGestureRecognizerDirectionLeft;
+            }
+        }
+    }
+    break;
+}
+case UIGestureRecognizerStateChanged: {
+    switch (direction) {
+        case UIPanGestureRecognizerDirectionUp: {
+            [self handleUpwardsGesture:sender];
+            break;
+        }
+        case UIPanGestureRecognizerDirectionDown: {
+            [self handleDownwardsGesture:sender];
+            break;
+        }
+        case UIPanGestureRecognizerDirectionLeft: {
+            [self handleLeftGesture:sender];
+            break;
+        }
+        case UIPanGestureRecognizerDirectionRight: {
+            [self handleRightGesture:sender];
+            break;
+        }
+        default: {
+            break;
+        }
+    }
+    break;
+}
+case UIGestureRecognizerStateEnded: {
+    direction = UIPanGestureRecognizerDirectionUndefined;   
+    break;
+}
+default:
+    break;
+</code></pre><p>}<br>}</p>
+<p>　　15. 拉伸图片的时候怎么才能让图片不变形？</p>
+<p>　　方法一：<br>1</p>
+<p>UIImage *image = [[UIImage imageNamed:@”xxx”] stretchableImageWithLeftCapWidth:10 topCapHeight:10];</p>
+<p>　　注：有开发者提醒这个已经弃用，现在的方法叫resizableImageWithCapInsets。</p>
+<p>　　方法二，如图：</p>
+<p>　　16. 怎么播放GIF的时候这么卡，有没有好点的库？</p>
+<p>　　FlipBoard出品的FLAnimatedImage太适合你了。</p>
+<p>　　17. 怎么一句话添加上拉刷新？</p>
+<p>　　使用SVPullToRefresh库：</p>
+<p>[tableView addPullToRefreshWithActionHandler:^{</p>
+<p>// prepend data to dataSource, insert cells at top of table view</p>
+<p>// call [tableView.pullToRefreshView stopAnimating] when done</p>
+<p>} position:SVPullToRefreshPositionBottom];</p>
+<p>　　18. 怎么把tableview里Cell的小对勾颜色改成别的颜色？<br>1</p>
+<p>_mTableView.tintColor = [UIColor redColor];</p>
+<p>　　19. 本来我的statusbar是lightcontent的，结果用UIImagePickerController会导致我的statusbar的样式变成黑色，怎么办？</p>
+<ul>
+<li>(void)navigationController:(UINavigationController <em>)navigationController willShowViewController:(UIViewController </em>)viewController animated:(BOOL)animated<br>{<br>  [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];<br>}</li>
+</ul>
+<p>　　20. 怎么把我的navigationbar弄成透明的而不是带模糊的效果？</p>
+<p>[self.navigationBar setBackgroundImage:[UIImage new]<br>                         forBarMetrics:UIBarMetricsDefault];<br>self.navigationBar.shadowImage = [UIImage new];<br>self.navigationBar.translucent = YES;</p>
+<p>　　21. 怎么改变uitextfield placeholder的颜色和位置？</p>
+<p>　　继承uitextfield，重写这个方法：</p>
+<ul>
+<li>(void) drawPlaceholderInRect:(CGRect)rect {</li>
+<li><ul>
+<li>[[UIColor blueColor] setFill];<br>[self.placeholder drawInRect:rect withFont:self.font lineBreakMode:UILineBreakModeTailTruncation alignment:self.textAlignment];<br>}</li>
+</ul>
+</li>
+</ul>
+<p>　　22. 你为什么知道这么多奇怪的花招？</p>
+<p>　　去Stack Overflow刷问题啊，少年！</p>
 
       
     </div>
@@ -342,17 +425,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/04/24/过程比目的重要-静默亦比喧嚣深刻/" rel="next" title="过程比目的重要,静默亦比喧嚣深刻">
-                <i class="fa fa-chevron-left"></i> 过程比目的重要,静默亦比喧嚣深刻
+              <a href="/2016/05/26/网络请求相关小结/" rel="next" title="网络请求相关小结">
+                <i class="fa fa-chevron-left"></i> 网络请求相关小结
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/11/14/iOS开发中的分辨率问题/" rel="prev" title="iOS开发中的分辨率问题">
-                iOS开发中的分辨率问题 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

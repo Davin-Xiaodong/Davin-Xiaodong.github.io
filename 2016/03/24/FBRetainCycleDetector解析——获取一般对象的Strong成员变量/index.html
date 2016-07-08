@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
+<meta name="description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql中的多行查询结果合并成一个">
-<meta property="og:url" content="http://yoursite.com/2015/07/04/mysql中的多行查询结果合并成一个/index.html">
+<meta property="og:title" content="FBRetainCycleDetector解析——获取一般对象的Strong成员变量">
+<meta property="og:url" content="http://yoursite.com/2016/03/24/FBRetainCycleDetector解析——获取一般对象的Strong成员变量/index.html">
 <meta property="og:site_name" content="陈晓东">
-<meta property="og:description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
-<meta property="og:updated_time" content="2016-07-04T03:37:39.000Z">
+<meta property="og:description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。">
+<meta property="og:updated_time" content="2016-07-04T03:43:21.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql中的多行查询结果合并成一个">
-<meta name="twitter:description" content="SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：
-利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|">
+<meta name="twitter:title" content="FBRetainCycleDetector解析——获取一般对象的Strong成员变量">
+<meta name="twitter:description" content="Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。">
 
 
 
@@ -114,7 +111,7 @@
   };
 </script>
 
-  <title> mysql中的多行查询结果合并成一个 | 陈晓东 </title>
+  <title> FBRetainCycleDetector解析——获取一般对象的Strong成员变量 | 陈晓东 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -234,7 +231,7 @@
             
             
               
-                mysql中的多行查询结果合并成一个
+                FBRetainCycleDetector解析——获取一般对象的Strong成员变量
               
             
           </h1>
@@ -246,8 +243,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2015-07-04T11:34:01+08:00" content="2015-07-04">
-              2015-07-04
+            <time itemprop="dateCreated" datetime="2016-03-24T20:00:17+08:00" content="2016-03-24">
+              2016-03-24
             </time>
           </span>
 
@@ -274,50 +271,79 @@
       
 
       
-        <p>SELECT GROUP_CONCAT(md.data1) FROM DATA md,contacts cc WHERE md.conskey=cc.id AND md.mimetype_id= 5 AND md.user_id=17：</p>
-<p>利用函数：group_concat(),实现一个ID对应多个名称时，原本为多行数据，把名称合并成一行，如|1 | 10,20,20|<br><a id="more"></a></p>
-<p>本文通过实例介绍了MySQL中的group_concat函数的使用方法，比如select group_concat(name) 。<br>MySQL中group_concat函数<br>完整的语法如下：<br>group_concat([DISTINCT] 要连接的字段 [Order BY ASC/DESC 排序字段] [Separator ‘分隔符’])</p>
-<p>基本查询<br>mysql&gt; select * from aa;</p>
-<p>+——+——+</p>
-<p>| id| name |</p>
-<p>+——+——+</p>
-<p>|1 | 10|</p>
-<p>|1 | 20|</p>
-<p>|1 | 20|</p>
-<p>|2 | 20|</p>
-<p>|3 | 200 |</p>
-<p>|3 | 500 |</p>
-<p>+——+——+</p>
-<p>6 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，逗号分隔(默认)<br>mysql&gt; select id,group_concat(name) from aa group by id;</p>
-<p>+——+——————–+</p>
-<p>| id| group_concat(name) |</p>
-<p>+——+——————–+</p>
-<p>|1 | 10,20,20|<br>|2 | 20 |<br>|3 | 200,500|</p>
-<p>+——+——————–+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，分号分隔<br>mysql&gt; select id,group_concat(name separator ‘;’) from aa group by id;</p>
-<p>+——+———————————-+</p>
-<p>| id| group_concat(name separator ‘;’) |</p>
-<p>+——+———————————-+</p>
-<p>|1 | 10;20;20 |<br>|2 | 20|<br>|3 | 200;500 |</p>
-<p>+——+———————————-+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把去冗余的name字段的值打印在一行，<br>逗号分隔</p>
-<p>mysql&gt; select id,group_concat(distinct name) from aa group by id;</p>
-<p>+——+—————————–+</p>
-<p>| id| group_concat(distinct name) |</p>
-<p>+——+—————————–+</p>
-<p>|1 | 10,20|<br>|2 | 20 |<br>|3 | 200,500 |</p>
-<p>+——+—————————–+</p>
-<p>3 rows in set (0.00 sec)</p>
-<p>以id分组，把name字段的值打印在一行，逗号分隔，以name排倒序<br>mysql&gt; select id,group_concat(name order by name desc) from aa group by id;</p>
-<p>+——+—————————————+</p>
-<p>| id| group_concat(name order by name desc) |</p>
-<p>+——+—————————————+</p>
-<p>|1 | 20,20,10 |<br>|2 | 20|<br>|3 | 500,200|</p>
-<p>+——+—————————————+</p>
-<p>3 rows in set (0.00 sec)<br>每天进步一点点</p>
+        <p>Facebook 前不久发布三个工具用于检测内存泄露，分别是 FBRetainCycleDetector、FBAllocationTracker 及 FBMemoryProfiler，并在他们的技术博客上发布了一篇相关的博客 Automatic memory leak detection on iOS。<br><a id="more"></a></p>
+<p>看了一下 FBRetainCycleDetector 的代码，通过 Runtime 捕获循环引用，原理在 Automatic memory leak detection on iOS 这篇博客中有说到：把对象（包括 Block 对象）当成节点，以强引用为关系建立有向图，以深度优先遍历该有向图，寻找有向图中的环，一个环就代表一个循环引用。</p>
+<p>本篇博客介绍 FBRetainCycleDetector 库中获取一般对象的 Strong 成员变量的原理。</p>
+<h1 id="Runtime-中的相关函数"><a href="#Runtime-中的相关函数" class="headerlink" title="Runtime 中的相关函数"></a>Runtime 中的相关函数</h1><p>先介绍一下 Runtime 中的几个函数：</p>
+<pre><code>Class object_getClass(id obj)：获取一个对象所属的类；
+Class class_getSuperclass(Class cls)：获取一个类的父类；
+Ivar *class_copyIvarList(Class cls, unsigned int *outCount)：获取某个类中的成员变量个数及成员变量数组，但是不包含父类的；
+ptrdiff_t ivar_getOffset(Ivar v)：获取成员变量中的偏移位置，关于成员变量偏移位置的解析，可以看这篇博客Objective-C类成员变量深度剖析；
+const uint8_t *class_getIvarLayout(Class cls)：获取某个类中 Strong 类型的成员变量的布局，关于 Ivar Layout 下面会展开说明一下。
+</code></pre><h1 id="Ivar-Layout"><a href="#Ivar-Layout" class="headerlink" title="Ivar Layout"></a>Ivar Layout</h1><p>const uint8_t *class_getIvarLayout(Class cls) 函数中有一个 Ivar Layout 的概念，表示成员变量的布局情况。</p>
+<p>相对于 Strong 类型的成员变量，函数 const uint8_t *class_getWeakIvarLayout(Class cls) 可以获取 Weak 类型的成员变量的布局情况。</p>
+<p>例子如下：</p>
+<p>@interface ClassA : NSObject<br>{<br>    <strong>unsafe_unretained id ivar0;
+    </strong>weak id ivar1;<br>    <strong>strong id ivar2;
+    </strong>weak id ivar3;<br>    <strong>strong id ivar4;
+    </strong>strong id ivar5;<br>}<br>@end</p>
+<p>const uint8_t <em>class_getIvarLayout(Class cls) 函数获取到的是一个 uint8_t 的数组，一个 uint8_t 在 16 进制下是两位，所以编码的值每两位一对。这两位中，前面一位表示有多少个非 Strong 类型的成员变量，后面一位表示接下来有多少个 Strong 类型的成员变量，而这个顺序是根据成员变量声明的顺序决定的，此顺序也跟函数 Ivar </em>class_copyIvarList(Class cls, unsigned int *outCount) 获取到的一致。</p>
+<p>在这个例子中，ClassA 类的 IvarLayout 的值为 0x211200：</p>
+<pre><code>0x211200 中的 21 中的 2 就代表一开始有两个非 Strong 类型的成员变量（ivar0 及 ivar1），其中的 1 则代表接下来有一个 Strong 类型的成员变量（ivar2）；
+接下来的 12 中的 1 代表接下来有一个 非 Strong 类型的成员变量（ivar3），其中的 2 则代表接下来有两个 Strong 类型的成员变量（ivar4 及 ivar5）；
+最后的 00 为结束符。
+</code></pre><p>同理我们可以推测出 ClassA 类的 WeakIvarLayout 的值为：0x111100。</p>
+<p>本段参考资料：Objective-C Class Ivar Layout 探索</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>基于上面介绍的几个函数，串连起来就可以实现获取一般对象的强引用对象的功能了，代码如下：</p>
+<ul>
+<li><p>(NSArray<nsvalue *=""> <em>)strongIvarsWithObject:(id)object<br>{<br>  NSMutableArray&lt;NSValue </em>&gt; *strongIvars = [NSMutableArray new];</nsvalue></p>
+<p>  <strong>unsafe_unretained Class previousClass = nil;
+  </strong>unsafe_unretained Class currentClass = object_getClass(object);</p>
+<p>  // 往上一直获取父类，直到 NSObject<br>  while (previousClass != currentClass) {</p>
+<pre><code>// 获取当前类的 Strong 成员变量布局
+const uint8_t * ivarLayout = class_getIvarLayout(currentClass);
+
+if (ivarLayout) {
+    // 找出 Strong 成员变量的位置
+    NSMutableIndexSet *interestingIndexes = [NSMutableIndexSet new];
+    NSUInteger index = 0;
+    while ((*ivarLayout) != &apos;\x00&apos;) {
+        // 获取高位（高位表示非 Strong 成员变量的个数）及低位（低位表示 Strong 成员变量的个数）
+        int upperNibble = (*ivarLayout &amp; 0xf0) &gt;&gt; 4;
+        int lowerNibble = *ivarLayout &amp; 0xf;
+
+        // 跳过非 Strong 成员变量的个数
+        index += upperNibble;
+
+        // 保存本次 Strong 成员变量的位置
+        [interestingIndexes addIndexesInRange:NSMakeRange(index, lowerNibble)];
+        index += lowerNibble;
+
+        ++ivarLayout;
+    }
+
+    // 获取当前类的成员变量数组
+    unsigned int ivarCount;
+    Ivar *ivars = class_copyIvarList(currentClass, (&amp;ivarCount));
+
+    // 遍历本类中的所有成员变量，保存位置在 interestingIndexes 中的成员变量
+    for (NSUInteger i = 0; i &lt; ivarCount; ++i) {
+        if ([interestingIndexes containsIndex:i]) {
+            Ivar ivar = ivars[i];
+
+            // 此处为简单化，直接把 Ivar 数据结构 NSValue 化，也可以创建一个表示 Ivar 的类
+            NSValue *ivarValue = [NSValue value:&amp;ivar withObjCType:@encode(Ivar)];
+            [strongIvars addObject:ivarValue];
+        }
+    }
+}
+
+previousClass = currentClass;
+currentClass = class_getSuperclass(currentClass);
+</code></pre><p>  }</p>
+<p>  return [strongIvars copy];<br>}</p>
+</li>
+</ul>
 
       
     </div>
@@ -342,16 +368,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/04/24/过程比目的重要-静默亦比喧嚣深刻/" rel="next" title="过程比目的重要,静默亦比喧嚣深刻">
-                <i class="fa fa-chevron-left"></i> 过程比目的重要,静默亦比喧嚣深刻
+              <a href="/2015/11/14/iOS开发中的分辨率问题/" rel="next" title="iOS开发中的分辨率问题">
+                <i class="fa fa-chevron-left"></i> iOS开发中的分辨率问题
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2015/11/14/iOS开发中的分辨率问题/" rel="prev" title="iOS开发中的分辨率问题">
-                iOS开发中的分辨率问题 <i class="fa fa-chevron-right"></i>
+              <a href="/2016/05/26/网络请求相关小结/" rel="prev" title="网络请求相关小结">
+                网络请求相关小结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -452,7 +478,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目录</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Runtime-中的相关函数"><span class="nav-number">1.</span> <span class="nav-text">Runtime 中的相关函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ivar-Layout"><span class="nav-number">2.</span> <span class="nav-text">Ivar Layout</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#代码"><span class="nav-number">3.</span> <span class="nav-text">代码</span></a></li></ol></div>
             
           </div>
         </section>
